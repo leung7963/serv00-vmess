@@ -28,16 +28,16 @@ export PORT=${PORT:-'20000'}           # ARGO端口必填
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9
 
 argo_configure() {
-clear
-purple "正在安装中,请稍等..."
-  if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
-    green "ARGO_DOMAIN or ARGO_AUTH is empty,use quick tunnel"
-    return
-  fi
+    clear
+    purple "正在安装中,请稍等..."
+    if [[ -z $ARGO_AUTH || -z $ARGO_DOMAIN ]]; then
+        green "ARGO_DOMAIN or ARGO_AUTH is empty,use quick tunnel"
+        return
+    fi
 
-  if [[ $ARGO_AUTH =~ TunnelSecret ]]; then
-    echo $ARGO_AUTH > tunnel.json
-    cat > tunnel.yml << EOF
+    if [[ $ARGO_AUTH =~ TunnelSecret ]]; then
+        echo $ARGO_AUTH > tunnel.json
+        cat > tunnel.yml << EOF
 tunnel: $(cut -d\" -f12 <<< "$ARGO_AUTH")
 credentials-file: tunnel.json
 protocol: http2
@@ -49,9 +49,9 @@ ingress:
       noTLSVerify: true
   - service: http_status:404
 EOF
-  else
-    green "ARGO_AUTH mismatch TunnelSecret,use token connect to tunnel"
-  fi
+    else
+        green "ARGO_AUTH mismatch TunnelSecret,use token connect to tunnel"
+    fi
 }
 argo_configure
 wait
@@ -66,20 +66,20 @@ else
     exit 1
 fi
 declare -A FILE_MAP
-generate_random_name() {
-    local chars=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
-    local name=""
-    for i in {1..6}; do
-        name="$name${chars:RANDOM%${#chars}:1}"
-    done
-    echo "$name"
-}
+# 不再需要生成随机文件名的函数
+# generate_random_name() {
+#     local chars=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+#     local name=""
+#     for i in {1..6}; do
+#         name="$name${chars:RANDOM%${#chars}:1}"
+#     done
+#     echo "$name"
+# }
 
 for entry in "${FILE_INFO[@]}"; do
     URL=$(echo "$entry" | cut -d ' ' -f 1)
-    RANDOM_NAME=$(generate_random_name)
-    NEW_FILENAME="$DOWNLOAD_DIR/$RANDOM_NAME"
-    
+    # 直接使用固定文件名，取原来分割后的第二个字段作为文件名
+    NEW_FILENAME="$DOWNLOAD_DIR/$(echo "$entry" | cut -d ' ' -f 2)"
     if [ -e "$NEW_FILENAME" ]; then
         green "$NEW_FILENAME already exists, Skipping download"
     else
@@ -92,11 +92,11 @@ done
 wait
 
 generate_config() {
-  output=$(./"${FILE_MAP[web]}" x25519)
-  private_key=$(echo "$output" | grep "Private key" | cut -d ' ' -f 3)
-  public_key=$(echo "$output" | grep "Public key" | cut -d ' ' -f 3)
-  
-  cat > config.json << EOF
+    output=$(./"${FILE_MAP[web]}" x25519)
+    private_key=$(echo "$output" | grep "Private key" | cut -d ' ' -f 3)
+    public_key=$(echo "$output" | grep "Public key" | cut -d ' ' -f 3)
+
+    cat > config.json << EOF
 {
     "log":{
         "access":"/dev/null",
@@ -187,18 +187,18 @@ if [ -e "$(basename ${FILE_MAP[npm]})" ]; then
     fi
     if [ -n "$NEZHA_SERVER" ] && [ -n "$NEZHA_PORT" ] && [ -n "$NEZHA_KEY" ]; then
         export TMPDIR=$(pwd)
-        nohup ./"$(basename ${FILE_MAP[npm]})" -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
+        nohup./"$(basename ${FILE_MAP[npm]})" -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
         sleep 2
-        pgrep -x "$(basename ${FILE_MAP[npm]})" > /dev/null && green "$(basename ${FILE_MAP[npm]}) is running" || { red "$(basename ${FILE_MAP[npm]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[npm]})" && nohup ./"$(basename ${FILE_MAP[npm]})" -s "${NEZHA_SERVER}:${NEZHA_PORT}" -p "${NEZHA_KEY}" ${NEZHA_TLS} >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[npm]}) restarted"; }
+        pgrep -x "$(basename ${FILE_MAP[npm]})" > /dev/null && green "$(basename ${FILE_MAP[npm]}) is running" || { red "$(basename ${FILE_MAP[npm]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[npm]})" && nohup./"$(basename ${FILE_MAP[npm]})" -s "${NEZHA_SERVER}:${NEZHA_PORT}" -p "${NEZHA_KEY}" ${NEZHA_TLS} >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[npm]}) restarted"; }
     else
         purple "NEZHA variable is empty, skipping running"
     fi
 fi
 
 if [ -e "$(basename ${FILE_MAP[web]})" ]; then
-    nohup ./"$(basename ${FILE_MAP[web]})" -c config.json >/dev/null 2>&1 &
+    nohup./"$(basename ${FILE_MAP[web]})" -c config.json >/dev/null 2>&1 &
     sleep 2
-    pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && green "$(basename ${FILE_MAP[web]}) is running" || { red "$(basename ${FILE_MAP[web]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[web]})" && nohup ./"$(basename ${FILE_MAP[web]})" -c config.json >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[web]}) restarted"; }
+    pgrep -x "$(basename ${FILE_MAP[web]})" > /dev/null && green "$(basename ${FILE_MAP[web]}) is running" || { red "$(basename ${FILE_MAP[web]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[web]})" && nohup./"$(basename ${FILE_MAP[web]})" -c config.json >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[web]}) restarted"; }
 fi
 
 if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
@@ -209,35 +209,35 @@ if [ -e "$(basename ${FILE_MAP[bot]})" ]; then
     else
       args="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile "${WORKDIR}/boot.log" --loglevel info --url http://localhost:$PORT"
     fi
-    nohup ./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
+    nohup./"$(basename ${FILE_MAP[bot]})" $args >/dev/null 2>&1 &
     sleep 3
-    pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && green "$(basename ${FILE_MAP[bot]}) is running" || { red "$(basename ${FILE_MAP[bot]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[bot]})" && nohup ./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[bot]}) restarted"; }
+    pgrep -x "$(basename ${FILE_MAP[bot]})" > /dev/null && green "$(basename ${FILE_MAP[bot]}) is running" || { red "$(basename ${FILE_MAP[bot]}) is not running, restarting..."; pkill -x "$(basename ${FILE_MAP[bot]})" && nohup./"$(basename ${FILE_MAP[bot]})" "${args}" >/dev/null 2>&1 & sleep 2; purple "$(basename ${FILE_MAP[bot]}) restarted"; }
 fi
 sleep 5
 # rm -f "$(basename ${FILE_MAP[npm]})" "$(basename ${FILE_MAP[web]})" "$(basename ${FILE_MAP[bot]})"
 
 get_argodomain() {
-  if [[ -n $ARGO_AUTH ]]; then
-    echo "$ARGO_DOMAIN"
-  else
-    grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' "${WORKDIR}/boot.log" | sed 's@https://@@'
-  fi
+    if [[ -n $ARGO_AUTH ]]; then
+        echo "$ARGO_DOMAIN"
+    else
+        grep -oE 'https://[[:alnum:]+\.-]+\.trycloudflare\.com' "${WORKDIR}/boot.log" | sed 's@https://@@'
+    fi
 }
 
 generate_links() {
-  argodomain=$(get_argodomain)
-  echo -e "\e[1;32mArgoDomain:\e[1;35m${argodomain}\e[0m\n"
-  sleep 1
-  isp=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18}' | sed -e 's/ /_/g')
-  sleep 1
-  cat > ${WORKDIR}/list.txt <<EOF
+    argodomain=$(get_argodomain())
+    echo -e "\e[1;32mArgoDomain:\e[1;35m${argodomain}\e[0m\n"
+    sleep 1
+    isp=$(curl -s --max-time 2 https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18}' | sed -e 's/ /_/g')
+    sleep 1
+    cat > ${WORKDIR}/list.txt <<EOF
 vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${isp}\", \"add\": \"${CFIP}\", \"port\": \"${CFPORT}\", \"id\": \"${UUID}\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"${argodomain}\", \"path\": \"vmess-argo?ed=2048\", \"tls\": \"tls\", \"sni\": \"${argodomain}\", \"alpn\": \"\" }" | base64 -w0)
 EOF
 
-  cat ${WORKDIR}/list.txt
-  echo -e "\n\e[1;32m${WORKDIR}/list.txt saved successfully\e[0m"
-  sleep 2  
-  # rm -rf config.json fake_useragent_0.2.0.json ${WORKDIR}/boot.log ${WORKDIR}/tunnel.json ${WORKDIR}/tunnel.yml 
+    cat ${WORKDIR}/list.txt
+    echo -e "\n\e[1;32m${WORKDIR}/list.txt saved successfully\e[0m"
+    sleep 2  
+    # rm -rf config.json fake_useragent_0.2.0.json ${WORKDIR}/boot.log ${WORKDIR}/tunnel.json ${WORKDIR}/tunnel.yml 
 }
 generate_links
 purple "Running done!"
