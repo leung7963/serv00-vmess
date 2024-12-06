@@ -78,7 +78,7 @@ generate_random_name() {
 for entry in "${FILE_INFO[@]}"; do
     URL=$(echo "$entry" | cut -d ' ' -f 1)
     RANDOM_NAME=$(generate_random_name)
-    NEW_FILENAME="$DOWNLOAD_DIR/$RANDOM_NAME"
+    NEW_FILENAME="$DOWNLOAD_DIR"
     
     if [ -e "$NEW_FILENAME" ]; then
         green "$NEW_FILENAME already exists, Skipping download"
