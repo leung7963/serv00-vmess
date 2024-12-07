@@ -194,6 +194,7 @@ EOF
 #!/bin/bash
 nohup ${FILE_PATH}/node $args >/dev/null 2>&1 &
 EOF
+    chmod +x ${FILE_PATH}/tunnel.sh
   fi
 } 
 run
