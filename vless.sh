@@ -1,12 +1,12 @@
 #!/bin/bash
 export UUID=${UUID:-'fc44fe6a-f083-4591-9c03-f8d61dc3907f'}
-export NEZHA_SERVER=${NEZHA_SERVER:-''} 
-export NEZHA_PORT=${NEZHA_PORT:-'5555'}     
+export NEZHA_SERVER=${NEZHA_SERVER:-'nezha.leung0108.us.kg'} 
+export NEZHA_PORT=${NEZHA_PORT:-'443'}     
 export NEZHA_KEY=${NEZHA_KEY:-''} 
 export ARGO_DOMAIN=${ARGO_DOMAIN:-''}   
 export ARGO_AUTH=${ARGO_AUTH:-''}    
-export CFIP=${CFIP:-'www.visa.com.tw'} 
-export CFPORT=${CFPORT:-'8443'}         
+export CFIP=${CFIP:-'dns.leung0108.us.kg'} 
+export CFPORT=${CFPORT:-'443'}         
 export NAME=${NAME:-'Serv00'}        
 export FILE_PATH=${FILE_PATH:-'./vless'}
 export ARGO_PORT=${ARGO_PORT:-'10000'}
