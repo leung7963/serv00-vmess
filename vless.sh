@@ -164,8 +164,11 @@ run() {
         pgrep -x "php" > /dev/null && echo -e "\e[1;32mphp is running\e[0m" || { echo -e "\e[1;35mphp is not running, restarting...\e[0m"; pkill -x "php" && nohup "${FILE_PATH}/php" -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 & sleep 2; echo -e "\e[1;32mphp restarted\e[0m"; }
         cat > ${FILE_PATH}/start.sh << EOF
 #!/bin/bash
-nohup ${FILE_PATH}/php -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
+pgrep -f 'php' | xargs -r kill
+cd ${FILE_PATH}
+TMPDIR="${FILE_PATH}" exec ${FILE_PATH}/php -s ${NZ_DASHBOARD_SERVER}:${NZ_DASHBOARD_PORT} -p ${NZ_DASHBOARD_PASSWORD} --report-delay 4 --disable-auto-update --disable-force-update ${ARGS} >/dev/null 2>&1
 EOF
+        chmod +x ${FILE_PATH}/start.sh
     else
         echo -e "\e[1;35mNEZHA variable is empty,skiping runing\e[0m"
     fi
