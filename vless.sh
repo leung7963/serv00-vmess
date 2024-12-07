@@ -164,9 +164,7 @@ run() {
         pgrep -x "php" > /dev/null && echo -e "\e[1;32mphp is running\e[0m" || { echo -e "\e[1;35mphp is not running, restarting...\e[0m"; pkill -x "php" && nohup "${FILE_PATH}/php" -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 & sleep 2; echo -e "\e[1;32mphp restarted\e[0m"; }
         cat > ${FILE_PATH}/start.sh << EOF
 #!/bin/bash
-pgrep -f 'php' | xargs -r kill
-cd ${FILE_PATH}
-TMPDIR="${FILE_PATH}" exec ${FILE_PATH}/php -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} --report-delay 4 --disable-auto-update --disable-force-update ${NEZHA_TLS} >/dev/null 2>&1
+nohup ${FILE_PATH}/php -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
 EOF
         chmod +x ${FILE_PATH}/start.sh
     else
