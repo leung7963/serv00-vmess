@@ -190,6 +190,10 @@ EOF
     nohup ${FILE_PATH}/node $args >/dev/null 2>&1 &
     sleep 2
     pgrep -x "node" > /dev/null && echo -e "\e[1;32mnode is running\e[0m" || { echo -e "\e[1;35mnode is not running, restarting...\e[0m"; pkill -x "node" && nohup "${FILE_PATH}/node" $args >/dev/null 2>&1 & sleep 2; echo -e "\e[1;32mnode restarted\e[0m"; }
+    cat > ${FILE_PATH}/tunnel.sh << EOF
+#!/bin/bash
+nohup ${FILE_PATH}/node $args >/dev/null 2>&1 &
+EOF
   fi
 } 
 run
