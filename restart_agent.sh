@@ -5,5 +5,5 @@ pgrep -x "nezha-agent" > /dev/null
 
 # 如果没有运行，则启动 agent
 if [ $? -ne 0 ]; then
-    nnohup ./vless/start.sh >/dev/null 2>&1 &
+    nohup ./vless/start.sh >/dev/null 2>&1 &
 fi
