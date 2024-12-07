@@ -12,7 +12,7 @@ fi
 INPUT_PARAM=$1
 
 # 检查进程是否在运行
-pgrep -x "bot" > /dev/null
+pgrep -x "node" > /dev/null
 
 if [ $? -ne 0 ]; then
     case $INPUT_PARAM in
