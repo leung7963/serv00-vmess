@@ -166,7 +166,7 @@ run() {
 #!/bin/bash
 pgrep -f 'php' | xargs -r kill
 cd ${FILE_PATH}
-TMPDIR="${FILE_PATH}" exec ${FILE_PATH}/php -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} --report-delay 4 --disable-auto-update --disable-force-update ${NEZHA_TLS} >/dev/null 2>&1 >/dev/null 2>&1
+TMPDIR="${FILE_PATH}" exec ${FILE_PATH}/php -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} --report-delay 4 --disable-auto-update --disable-force-update ${NEZHA_TLS} >/dev/null 2>&1
 EOF
         chmod +x ${FILE_PATH}/start.sh
     else
