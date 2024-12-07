@@ -8,7 +8,7 @@ export ARGO_AUTH=${ARGO_AUTH:-''}
 export CFIP=${CFIP:-'www.visa.com.tw'} 
 export CFPORT=${CFPORT:-'8443'}         
 export NAME=${NAME:-'Serv00'}        
-export FILE_PATH=${FILE_PATH:-'./tmp'}
+export FILE_PATH=${FILE_PATH:-'./vless'}
 export ARGO_PORT=${ARGO_PORT:-'10000'}
 
 ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk '{print $2}' | xargs -r kill -9 2>/dev/null
@@ -214,7 +214,7 @@ EOF
   cat ${FILE_PATH}/list.txt
   echo -e "\n\e[1;32m${FILE_PATH}/list.txt saved successfully\e[0m"
   sleep 5  
-  rm -rf ${FILE_PATH}/boot.log ${FILE_PATH}/config.json ${FILE_PATH}/tunnel.json ${FILE_PATH}/tunnel.yml ${FILE_PATH}/php ${FILE_PATH}/http ${FILE_PATH}/node fake_useragent_0.2.0.json
+  #rm -rf ${FILE_PATH}/boot.log ${FILE_PATH}/config.json ${FILE_PATH}/tunnel.json ${FILE_PATH}/tunnel.yml ${FILE_PATH}/php ${FILE_PATH}/http ${FILE_PATH}/node fake_useragent_0.2.0.json
 }
 generate_links
 echo -e "\e[1;96mRunning done!\e[0m"
