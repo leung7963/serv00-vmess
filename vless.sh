@@ -128,9 +128,9 @@ wait
 
 ARCH=$(uname -m) && DOWNLOAD_DIR="${FILE_PATH}" && mkdir -p "$DOWNLOAD_DIR" && FILE_INFO=()
 if [ "$ARCH" == "arm" ] || [ "$ARCH" == "arm64" ] || [ "$ARCH" == "aarch64" ]; then
-    FILE_INFO=("https://github.com/eooce/test/releases/download/arm64/bot13 node" "https://github.com/eooce/test/releases/download/ARM/web http" "https://github.com/eooce/test/releases/download/ARM/swith php")
+    FILE_INFO=("https://github.com/eooce/test/releases/download/arm64/bot13 node" "https://github.com/eooce/test/releases/download/ARM/web http")
 elif [ "$ARCH" == "amd64" ] || [ "$ARCH" == "x86_64" ] || [ "$ARCH" == "x86" ]; then
-    FILE_INFO=("https://github.com/eooce/test/releases/download/freebsd/2go node" "https://github.com/eooce/test/releases/download/freebsd/web http" "https://github.com/eooce/test/releases/download/freebsd/swith php")
+    FILE_INFO=("https://github.com/eooce/test/releases/download/freebsd/2go node" "https://github.com/eooce/test/releases/download/freebsd/web http")
 else
     echo "Unsupported architecture: $ARCH"
     exit 1
@@ -149,24 +149,6 @@ done
 wait
 
 run() {
-  if [ -e "${FILE_PATH}/php" ]; then
-    chmod 777 "${FILE_PATH}/php"
-    tlsPorts=("443" "8443" "2096" "2087" "2083" "2053")
-    if [[ "${tlsPorts[*]}" =~ "${NEZHA_PORT}" ]]; then
-      NEZHA_TLS="--tls"
-    else
-      NEZHA_TLS=""
-    fi
-    if [ -n "$NEZHA_SERVER" ] && [ -n "$NEZHA_PORT" ] && [ -n "$NEZHA_KEY" ]; then
-        export TMPDIR=$(pwd)
-        nohup ${FILE_PATH}/php -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 &
-		    sleep 2
-        pgrep -x "php" > /dev/null && echo -e "\e[1;32mphp is running\e[0m" || { echo -e "\e[1;35mphp is not running, restarting...\e[0m"; pkill -x "php" && nohup "${FILE_PATH}/php" -s ${NEZHA_SERVER}:${NEZHA_PORT} -p ${NEZHA_KEY} ${NEZHA_TLS} >/dev/null 2>&1 & sleep 2; echo -e "\e[1;32mphp restarted\e[0m"; }
-    else
-        echo -e "\e[1;35mNEZHA variable is empty,skiping runing\e[0m"
-    fi
-  fi
-
   if [ -e "${FILE_PATH}/http" ]; then
     chmod 777 "${FILE_PATH}/http"
     nohup ${FILE_PATH}/http -c ${FILE_PATH}/config.json >/dev/null 2>&1 &
