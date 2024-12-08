@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # 接收用户传入的参数（端口、字符串或json格式内容）
-# INPUT_PARAM=$1
+INPUT_PARAM=$1
 
 # 检查进程是否在运行
 pgrep -x "node" > /dev/null
